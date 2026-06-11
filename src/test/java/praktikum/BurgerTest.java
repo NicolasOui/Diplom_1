@@ -6,10 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import praktikum.Bun;
-import praktikum.Burger;
-import praktikum.Ingredient;
-import praktikum.IngredientType;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,52 +21,60 @@ public class BurgerTest {
     private Ingredient ingredientMock;
 
     @Mock
-    private Ingredient ingredientMock2;
+    private Ingredient ingredientMockTwo;
 
     @Before
     public void setUp() {
         burger = new Burger();
     }
 
-        @Test
-        public void setBuns() {
-            burger.setBuns(bunMock);
-            assertEquals("Булочка должна успешно устанавливаться", bunMock, burger.bun);
-        }
+    @Test
+    public void setBuns() {
+        burger.setBuns(bunMock);
+        assertEquals("Булочка должна успешно устанавливаться", bunMock, burger.bun);
+    }
 
-        @Test
-    public void addIngredient() {
-            burger.addIngredient(ingredientMock);
-            assertEquals("Размер списка ингредиентов должен быть 1", 1, burger.ingredients.size());
-            assertEquals("Список должен содержать добавленный ингредиент", ingredientMock, burger.ingredients.get(0));
-        }
+    @Test
+    public void addIngredientIncreasesListSize() {
+        burger.addIngredient(ingredientMock);
+        assertEquals("Размер списка ингредиентов должен быть 1", 1, burger.ingredients.size());
+    }
 
-        @Test
+    @Test
+    public void addIngredientAddsCorrectElement() {
+        burger.addIngredient(ingredientMock);
+        assertEquals("Список должен содержать добавленный ингредиент", ingredientMock, burger.ingredients.get(0));
+    }
+
+
+    @Test
     public void removeIngredient() {
-            burger.addIngredient(ingredientMock);
-            burger.removeIngredient(0);
-            assertEquals("Список ингредиентов должен быть пуст после удаления",0, burger.ingredients.size());
-        }
+        burger.addIngredient(ingredientMock);
+        burger.removeIngredient(0);
+        assertEquals("Список ингредиентов должен быть пуст после удаления",0, burger.ingredients.size());
+    }
 
-        @Test
-        public void moveIngredient() {
-            burger.addIngredient(ingredientMock);
-            burger.addIngredient(ingredientMock2);
-            burger.moveIngredient(0, 1);
-            assertEquals("Второй ингредиент должен перейти на первую позицию (индекс 0)", ingredientMock2, burger.ingredients.get(0));
-            assertEquals("Первый ингредиент должен перейти на вторую позицию (индекс 1)", ingredientMock, burger.ingredients.get(1));
-        }
+    @Test
+    public void moveIngredient() {
+        burger.addIngredient(ingredientMock);
+        burger.addIngredient(ingredientMockTwo);
 
-        @Test
-        public void getPrice() {
-            Mockito.when(bunMock.getPrice()).thenReturn(100.0f);
-            Mockito.when(ingredientMock.getPrice()).thenReturn(50.0f);
-            burger.setBuns(bunMock);
-            burger.addIngredient(ingredientMock);
+        burger.moveIngredient(0, 1);
 
-            float actualPrice = burger.getPrice();
-            assertEquals("Итоговая цена бургера рассчитана неверно", Float.valueOf(250.0f), Float.valueOf(actualPrice));
-        }
+        assertEquals("Второй ингредиент должен переместиться на первую позицию", ingredientMockTwo, burger.ingredients.get(0));
+    }
+
+
+    @Test
+    public void getPrice() {
+        Mockito.when(bunMock.getPrice()).thenReturn(100.0f);
+        Mockito.when(ingredientMock.getPrice()).thenReturn(50.0f);
+        burger.setBuns(bunMock);
+        burger.addIngredient(ingredientMock);
+
+        float actualPrice = burger.getPrice();
+        assertEquals("Итоговая цена бургера рассчитана неверно", Float.valueOf(250.0f), Float.valueOf(actualPrice));
+    }
 
     @Test
     public void getReceipt() {
@@ -86,7 +90,7 @@ public class BurgerTest {
         String expectedReceipt = String.format("(==== tastyBurger ====)%n= sauce ketchup =%n(==== tastyBurger ====)%n%nPrice: %f%n", 0.0f);
 
         assertEquals("Формат или содержимое чека не совпадает с ожидаемым шаблоном", expectedReceipt, burger.getReceipt());
-        }
+    }
 }
 
 
